@@ -1,4 +1,4 @@
-import Order from "./Order";
+import Order from "../src/Order";
 
 test('Não deve criar um pedido com CPF inválido', () => {
     const cpf = '123.456.789-10';

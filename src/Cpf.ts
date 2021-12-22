@@ -6,22 +6,22 @@ export default class Cpf {
         this.value = value;
     }
 
-    FACTOR_DIGIT_1 = 10;
-    FACTOR_DIGIT_2 = 11;
+    FACTOR_FIRST_VERIFIER_DIGIT = 10;
+    FACTOR_SECOND_VERIFIER_DIGIT = 11;
     MAX_DIGITS_1 = 9;
     MAX_DIGITS_2 = 10;
 
     validate(cpf = "") {
-        cpf = this.extractDigits(cpf);
+        cpf = this.getOnlyDigitsCpf(cpf);
         if (this.isInvalidLength(cpf)) return false;
-        if (this.isBlocked(cpf)) return false;
-        const digit1 = this.calculateDigit(cpf, this.FACTOR_DIGIT_1, this.MAX_DIGITS_1);
-        const digit2 = this.calculateDigit(cpf, this.FACTOR_DIGIT_2, this.MAX_DIGITS_2);
-        let calculatedCheckDigit = `${digit1}${digit2}`;  
-        return this.getCheckDigit(cpf) == calculatedCheckDigit;
+        if (this.areAllDigitsEquals(cpf)) return false;
+        const firstDigitVerifier = this.calculateDigit(cpf, this.FACTOR_FIRST_VERIFIER_DIGIT, this.MAX_DIGITS_1);
+        const secondDigitVerifier = this.calculateDigit(cpf, this.FACTOR_SECOND_VERIFIER_DIGIT, this.MAX_DIGITS_2);
+        let calculatedDigitVerified = `${firstDigitVerifier}${secondDigitVerifier}`;  
+        return this.getCheckDigit(cpf) == calculatedDigitVerified;
     }
 
-    extractDigits(cpf: string) {
+    getOnlyDigitsCpf(cpf: string) {
         return cpf.replace(/\D/g, "");
     }
 
@@ -29,9 +29,9 @@ export default class Cpf {
         return cpf.length !== 11;
     }
 
-    isBlocked(cpf: string) {
-        const [digit1] = cpf;
-        return cpf.split("").every(digit => digit === digit1);
+    areAllDigitsEquals(cpf: string) {
+        const [firstDigit] = cpf;
+        return cpf.split("").every(digit => digit === firstDigit);
     }
 
     calculateDigit(cpf: string, factor: number, max: number) {
